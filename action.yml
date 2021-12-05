@@ -41,6 +41,7 @@ runs:
     - ${{ inputs.github_token }}
     - ${{ inputs.path_mapping }}
     - ${{ inputs.target_repo }}
+    - ${{ inputs.target_repo_dir }}
     - ${{ inputs.pr_source_branch }}
     - ${{ inputs.pr_target_branch }}
     - ${{ inputs.pr_title }}

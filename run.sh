@@ -1,19 +1,30 @@
 #!/bin/bash
 set -e
 
+INPUT_GITHUB_TOKEN=${1:-$INPUT_GITHUB_TOKEN}
+INPUT_PATH_MAPPING=${2:-$INPUT_PATH_MAPPING}
+INPUT_TARGET_REPO=${3:-$INPUT_TARGET_REPO}
+INPUT_TARGET_REPO_DIR=${4:-$INPUT_TARGET_REPO_DIR}
+INPUT_PR_SOURCE_BRANCH=${5:-$INPUT_PR_SOURCE_BRANCH}
+INPUT_PR_TARGET_BRANCH=${6:-$INPUT_PR_TARGET_BRANCH}
+INPUT_PR_TITLE=${7:-$INPUT_PR_TITLE}
+INPUT_COMMIT_MSG=${8:-$INPUT_COMMIT_MSG}
+INPUT_GIT_EMAIL=${9:-$INPUT_GIT_EMAIL}
+INPUT_GIT_USERNAME=${10:-$INPUT_GIT_USERNAME}
+
 if [ -z "$INPUT_GITHUB_TOKEN" ]; then
     echo "Var INPUT_GITHUB_TOKEN required"
-    return -1
+    exit 1
 fi
 
 if [ -z "$INPUT_TARGET_REPO" ]; then
     echo "Var INPUT_TARGET_REPO required"
-    return -1
+    exit 1
 fi
 
 if [ -z "$INPUT_PATH_MAPPING" ]; then
     echo "Var INPUT_PATH_MAPPING required"
-    return -1
+    exit 1
 fi
 
 gh auth login --with-token <<< "${INPUT_GITHUB_TOKEN}"
