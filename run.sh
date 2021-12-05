@@ -35,6 +35,7 @@ git config --global user.name "${INPUT_GIT_USERNAME:-Loft Bot}" "Repo Sync Bot"
 
 SOURCE_REPO_DIR=$PWD
 TARGET_REPO_DIR=$(mktemp -d)
+GIT_FOLDER_BACKUP_DIR=$(mktemp -d)
 
 if [ -z "$INPUT_TARGET_REPO_DIR" ]; then
     # Clone target repo
@@ -89,7 +90,15 @@ for PATH_MAPPING in $INPUT_PATH_MAPPING; do
         TARGET_PATH="${TARGET_REPO_DIR}/${PATH_MAP[1]}"
     fi
 
+    if [ -d "$TARGET_PATH/.git" ]; then
+        mv "$TARGET_PATH/.git" "$GIT_FOLDER_BACKUP_DIR/"
+    fi
+
     rm -rf "$TARGET_PATH"
+
+    if [ -d "$GIT_FOLDER_BACKUP_DIR/.git" ]; then
+        mv "$TARGET_PATH/.git" "$TARGET_PATH/"
+    fi
     
     if [ -d "$SOURCE_PATH" ]; then
         TARGET_PATH="${TARGET_PATH%/*}"
@@ -101,6 +110,8 @@ for PATH_MAPPING in $INPUT_PATH_MAPPING; do
     
     shopt -s dotglob nullglob
     cp -rf $SOURCE_PATH "$TARGET_PATH";  # DO NOT ADD QUOTES TO SOURCE_PATH
+
+    cd $TARGET_REPO_DIR     # DO NOT REMOVE / Must ensure workdir if it was recreated
 
     if [ -z "$INPUT_COMMIT_MSG" ]; then
         INPUT_COMMIT_MSG=$(cd "$SOURCE_REPO_DIR" && git log -1 --format="%s" "$SOURCE_PATH")
