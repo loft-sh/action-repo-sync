@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM loftsh/alpine:latest
 
 ADD install.sh .
 RUN chmod +x install.sh && ./install.sh
