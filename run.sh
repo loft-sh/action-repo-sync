@@ -30,7 +30,7 @@ fi
 
 gh auth login --with-token <<< "${INPUT_GITHUB_TOKEN}"
 
-git config --global user.email "${INPUT_GIT_EMAIL:-bot@loft.sh}" "noreply@loft.sh"
+git config --global user.email "${INPUT_GIT_EMAIL:-73976634+loft-bot@users.noreply.github.com}" "noreply@loft.sh"
 git config --global user.name "${INPUT_GIT_USERNAME:-Loft Bot}" "Repo Sync Bot"
 
 SOURCE_REPO_DIR=$PWD
