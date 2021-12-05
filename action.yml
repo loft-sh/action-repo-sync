@@ -1,0 +1,48 @@
+name: 'Sync Code To Another Repository'
+description: 'Syncs code via git push OR pull requests from current repository to another repository'
+inputs:
+  github_token:
+    description: 'GitHub access token for accessing destination repository'
+    required: true
+  path_mapping:
+    description: '{source_path:dest_path,...} path mapping'
+    required: true
+  target_repo:
+    description: 'Destination repository'
+    required: true
+  pr_source_branch:
+    description: 'The branch to create to push the changes. Cannot be master or main'
+    required: false
+  pr_target_branch:
+    description: 'The branch into which you want your code merged.'
+    required: false
+    default: "main"
+  pr_title:
+    description: 'The PR title which will be defined in the PR'
+    required: false
+    default: "chore: repo-sync"
+  commit_msg:
+    description: 'The commit message which will be used.'
+    required: false
+  git_email:
+    description: 'Email for the git commit'
+    required: false
+  git_username:
+    description: 'Git username for the commit'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.github_token }}
+    - ${{ inputs.path_mapping }}
+    - ${{ inputs.target_repo }}
+    - ${{ inputs.pr_source_branch }}
+    - ${{ inputs.pr_target_branch }}
+    - ${{ inputs.pr_title }}
+    - ${{ inputs.commit_msg }}
+    - ${{ inputs.git_email }}
+    - ${{ inputs.git_username }}
+branding:
+  icon: 'git-commit'
+  color: 'green'
