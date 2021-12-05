@@ -58,8 +58,7 @@ else
     BRANCH_EXISTS=$(git show-ref "$INPUT_PR_SOURCE_BRANCH" | wc -l)
 
     git fetch -a
-    if [ "$BRANCH_EXISTS" = 1 ];
-    then
+    if [ "$BRANCH_EXISTS" = 1 ]; then
         git checkout "$INPUT_PR_SOURCE_BRANCH"
     else
         git checkout -b "$INPUT_PR_SOURCE_BRANCH"
@@ -119,6 +118,14 @@ if [ "$HAS_CHANGES" = true ]; then
 fi
 
 if [ "$USE_PR" = true ]; then
+
+    if [ "$INPUT_PR_TARGET_BRANCH" = "main" ]; then
+        MAIN_BRANCH_EXISTS=$(git show-ref "$INPUT_PR_TARGET_BRANCH" | wc -l)
+
+        if ! [ "$MAIN_BRANCH_EXISTS" = 1 ]; then
+            INPUT_PR_TARGET_BRANCH="master"
+        fi
+    fi
 
     PR_STATE=$(gh pr view "$INPUT_PR_SOURCE_BRANCH" --json state --template "{{.state}}" || echo "UNKNOWN")
     if ! [ "$PR_STATE" = "OPEN" ]; then
