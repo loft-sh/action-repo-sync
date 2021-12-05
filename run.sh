@@ -16,18 +16,25 @@ if [ -z "$INPUT_PATH_MAPPING" ]; then
     return -1
 fi
 
+gh auth login --with-token <<< "${INPUT_GITHUB_TOKEN}"
+
 git config --global user.email "${INPUT_GIT_EMAIL:-bot@loft.sh}" "noreply@loft.sh"
 git config --global user.name "${INPUT_GIT_USERNAME:-Loft Bot}" "Repo Sync Bot"
 
 SOURCE_REPO_DIR=$PWD
 TARGET_REPO_DIR=$(mktemp -d)
 
-gh auth login --with-token <<< "${INPUT_GITHUB_TOKEN}"
-
-git clone "https://${INPUT_GITHUB_TOKEN}@github.com/${INPUT_TARGET_REPO}.git" "$TARGET_REPO_DIR"
-git remote set-url origin "https://${INPUT_GITHUB_TOKEN}@github.com/${REPO_DIR}.git"
+if [ -z "$INPUT_TARGET_REPO_DIR" ]; then
+    # Clone target repo
+    git clone "https://${INPUT_GITHUB_TOKEN}@github.com/${INPUT_TARGET_REPO}.git" "$TARGET_REPO_DIR"
+else
+    # Use already cloned repo
+    TARGET_REPO_DIR = $INPUT_TARGET_REPO_DIR
+fi
 
 cd $TARGET_REPO_DIR
+git remote set-url origin "https://${INPUT_GITHUB_TOKEN}@github.com/${INPUT_TARGET_REPO}.git"
+
 
 USE_PR=true
 if [ "$INPUT_PR_SOURCE_BRANCH" = "$INPUT_PR_TARGET_BRANCH" ]; then

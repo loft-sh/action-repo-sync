@@ -10,6 +10,9 @@ inputs:
   target_repo:
     description: 'Destination repository'
     required: true
+  target_repo_dir:
+    description: 'Destination repository (use already cloned folder)'
+    required: false
   pr_source_branch:
     description: 'The branch to create to push the changes. Cannot be master or main'
     required: false
