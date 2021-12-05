@@ -97,7 +97,7 @@ for PATH_MAPPING in $INPUT_PATH_MAPPING; do
     rm -rf "$TARGET_PATH"
 
     if [ -d "$GIT_FOLDER_BACKUP_DIR/.git" ]; then
-        mv "$TARGET_PATH/.git" "$TARGET_PATH/"
+        mv "$GIT_FOLDER_BACKUP_DIR/.git" "$TARGET_PATH/"
     fi
     
     if [ -d "$SOURCE_PATH" ]; then
