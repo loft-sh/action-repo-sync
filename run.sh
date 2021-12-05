@@ -30,7 +30,7 @@ git remote set-url origin "https://${INPUT_GITHUB_TOKEN}@github.com/${REPO_DIR}.
 cd $TARGET_REPO_DIR
 
 USE_PR=true
-if [ -z "$INPUT_PR_SOURCE_BRANCH" ] || [ "$INPUT_PR_SOURCE_BRANCH" = "$INPUT_PR_TARGET_BRANCH" ]; then
+if [ "$INPUT_PR_SOURCE_BRANCH" = "$INPUT_PR_TARGET_BRANCH" ]; then
     USE_PR=false
 fi
 
