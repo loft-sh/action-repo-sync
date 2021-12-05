@@ -77,14 +77,15 @@ for PATH_MAPPING in $INPUT_PATH_MAPPING; do
     SOURCE_PATH="${SOURCE_REPO_DIR}/${PATH_MAP[0]}"
     if [ -z "${PATH_MAP[1]}" ]; then
         TARGET_PATH="${TARGET_REPO_DIR}/${PATH_MAP[0]}"
-        if [ -d "$SOURCE_PATH" ]; then
-            TARGET_PATH="${TARGET_PATH%/*}"
-        fi
     else
         TARGET_PATH="${TARGET_REPO_DIR}/${PATH_MAP[1]}"
     fi
 
     rm -rf "$TARGET_PATH"
+    
+    if [ -d "$SOURCE_PATH" ]; then
+        TARGET_PATH="${TARGET_PATH%/*}"
+    fi
 
     if ! [ -f "$SOURCE_PATH" ] || [ "${TARGET_PATH: -1}" == "/" ] ; then
         mkdir -p "$TARGET_PATH"
