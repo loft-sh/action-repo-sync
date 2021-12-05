@@ -48,9 +48,12 @@ cd $TARGET_REPO_DIR
 git remote set-url origin "https://${INPUT_GITHUB_TOKEN}@github.com/${INPUT_TARGET_REPO}.git"
 
 
-USE_PR=true
-if [ "$INPUT_PR_SOURCE_BRANCH" = "$INPUT_PR_TARGET_BRANCH" ]; then
-    USE_PR=false
+if [ "$INPUT_PR_TARGET_BRANCH" = "main" ]; then
+    MAIN_BRANCH_EXISTS=$(git show-ref "$INPUT_PR_TARGET_BRANCH" | wc -l)
+
+    if ! [ "$MAIN_BRANCH_EXISTS" = 1 ]; then
+        INPUT_PR_TARGET_BRANCH="master"
+    fi
 fi
 
 if [ -z "$INPUT_PR_SOURCE_BRANCH" ]; then
@@ -64,6 +67,11 @@ else
     else
         git checkout -b "$INPUT_PR_SOURCE_BRANCH"
     fi
+fi
+
+USE_PR=true
+if [ "$INPUT_PR_SOURCE_BRANCH" = "$INPUT_PR_TARGET_BRANCH" ]; then
+    USE_PR=false
 fi
 
 
@@ -120,14 +128,6 @@ if [ "$HAS_CHANGES" = true ]; then
 fi
 
 if [ "$USE_PR" = true ]; then
-
-    if [ "$INPUT_PR_TARGET_BRANCH" = "main" ]; then
-        MAIN_BRANCH_EXISTS=$(git show-ref "$INPUT_PR_TARGET_BRANCH" | wc -l)
-
-        if ! [ "$MAIN_BRANCH_EXISTS" = 1 ]; then
-            INPUT_PR_TARGET_BRANCH="master"
-        fi
-    fi
 
     PR_STATE=$(gh pr view "$INPUT_PR_SOURCE_BRANCH" --json state --template "{{.state}}" || echo "UNKNOWN")
     if ! [ "$PR_STATE" = "OPEN" ]; then
