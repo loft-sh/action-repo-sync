@@ -53,7 +53,7 @@ git remote set-url origin "https://${INPUT_GITHUB_TOKEN}@github.com/${INPUT_TARG
 git fetch -a
 
 if [ "$INPUT_PR_TARGET_BRANCH" = "main" ]; then
-    MAIN_BRANCH_EXISTS=$(git show-ref "$INPUT_PR_TARGET_BRANCH")
+    MAIN_BRANCH_EXISTS=$(git show-ref "$INPUT_PR_TARGET_BRANCH" || echo "")
 
     if [ -z "$MAIN_BRANCH_EXISTS" ]; then
         INPUT_PR_TARGET_BRANCH="master"
@@ -63,7 +63,7 @@ fi
 if [ -z "$INPUT_PR_SOURCE_BRANCH" ]; then
     INPUT_PR_SOURCE_BRANCH=${INPUT_PR_TARGET_BRANCH}
 else
-    BRANCH_EXISTS=$(git show-ref "$INPUT_PR_SOURCE_BRANCH")
+    BRANCH_EXISTS=$(git show-ref "$INPUT_PR_SOURCE_BRANCH" || echo "")
     if [ -z "$BRANCH_EXISTS" ]; then
         git checkout -b "$INPUT_PR_SOURCE_BRANCH"
     else
