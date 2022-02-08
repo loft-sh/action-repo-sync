@@ -77,8 +77,6 @@ if [ "$INPUT_PR_SOURCE_BRANCH" = "$INPUT_PR_TARGET_BRANCH" ]; then
 fi
 
 
-HAS_CHANGES=false
-
 export IFS=";"
 for PATH_MAPPING in $INPUT_PATH_MAPPING; do
 
@@ -128,20 +126,13 @@ for PATH_MAPPING in $INPUT_PATH_MAPPING; do
 
     git add -A
 
-    COMMIT_SUCCESSFUL=true
-    git commit -m "$INPUT_COMMIT_MSG" || COMMIT_SUCCESSFUL=false
-
-    if [ "$COMMIT_SUCCESSFUL" = true ]; then 
-        HAS_CHANGES=true
-    fi
+    git commit -m "$INPUT_COMMIT_MSG" || echo "Skipped commit"
 
 done
 
 cd "$REPO_DIR"
 
-if [ "$HAS_CHANGES" = true ]; then
-    git push --force -u origin HEAD:$INPUT_PR_SOURCE_BRANCH
-fi
+git push -u origin HEAD:$INPUT_PR_SOURCE_BRANCH || git push --force -u origin HEAD:$INPUT_PR_SOURCE_BRANCH || echo "Skipped push"
 
 if [ "$USE_PR" = true ]; then
 
