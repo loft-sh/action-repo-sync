@@ -34,6 +34,7 @@ gh auth login --with-token <<< "${INPUT_GITHUB_TOKEN}"
 
 git config --global user.email "${INPUT_GIT_EMAIL:-73976634+loft-bot@users.noreply.github.com}" "noreply@loft.sh"
 git config --global user.name "${INPUT_GIT_USERNAME:-Loft Bot}" "Repo Sync Bot"
+git config --global --add safe.directory /github/workspace
 
 SOURCE_REPO_DIR=$PWD
 TARGET_REPO_DIR=$(mktemp -d)
